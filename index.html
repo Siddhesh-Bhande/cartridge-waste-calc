@@ -6,77 +6,70 @@
     <title>Cartridge Waste Calculator</title>
     <style>
         :root {
-            --primary: #6366f1;
-            --primary-hover: #4f46e5;
-            --background: #0f172a;
-            --card-bg: rgba(30, 41, 59, 0.7);
-            --text-main: #f8fafc;
-            --text-muted: #cbd5e1;
-            --accent: #10b981;
+            --bg-body: #f9fafb;
+            --bg-card: #ffffff;
+            --text-main: #111827;
+            --text-muted: #6b7280;
+            --border: #e5e7eb;
+            --primary: #2563eb;
+            --ring: rgba(37, 99, 235, 0.2);
             --danger: #ef4444;
+            --danger-bg: #fef2f2;
+            --danger-border: #fca5a5;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
         body {
-            background-color: var(--background);
-            background-image: 
-                radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
-                radial-gradient(at 50% 0%, hsla(225,39%,30%,0.2) 0, transparent 50%), 
-                radial-gradient(at 100% 0%, hsla(339,49%,30%,0.2) 0, transparent 50%);
-            background-attachment: fixed;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-body);
             color: var(--text-main);
-            min-height: 100vh;
+            line-height: 1.5;
+            padding: 3rem 1rem;
             display: flex;
             justify-content: center;
-            padding: 2rem 1rem;
         }
 
         .container {
             width: 100%;
             max-width: 800px;
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
         }
 
         header {
-            text-align: center;
-            margin-bottom: 1rem;
+            margin-bottom: 2rem;
+            text-align: left;
         }
 
         h1 {
-            font-size: 2.5rem;
-            font-weight: 800;
-            background: linear-gradient(to right, #818cf8, #c084fc);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: -0.025em;
+            color: var(--text-main);
+            margin-bottom: 0.25rem;
         }
 
         p.subtitle {
             color: var(--text-muted);
-            font-size: 1.1rem;
+            font-size: 0.875rem;
         }
 
-        .glass-panel {
-            background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
             padding: 2rem;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 2rem;
         }
 
         .input-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: 1.5rem;
         }
 
@@ -87,200 +80,173 @@
         }
 
         label {
-            font-size: 0.95rem;
+            font-size: 0.875rem;
             font-weight: 500;
-            color: var(--text-muted);
-            transition: color 0.3s ease;
-        }
-
-        .input-group:focus-within label {
-            color: var(--primary);
+            color: var(--text-main);
         }
 
         input {
-            background: rgba(15, 23, 42, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 100%;
+            padding: 0.625rem 0.75rem;
+            font-size: 0.875rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background-color: #fff;
             color: var(--text-main);
-            padding: 1rem;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            outline: none;
-            transition: all 0.3s ease;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+            transition: all 0.2s ease;
         }
 
         input:focus {
+            outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2), inset 0 2px 4px rgba(0,0,0,0.2);
+            box-shadow: 0 0 0 3px var(--ring);
         }
 
-        input::-webkit-outer-spin-button,
-        input::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
+        input::placeholder {
+            color: #9ca3af;
         }
-        input[type=number] {
-            -moz-appearance: textfield;
+
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
+        }
+
+        .error-message {
+            display: none;
+            background-color: var(--danger-bg);
+            border: 1px solid var(--danger-border);
+            color: var(--danger);
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 2rem;
+            font-size: 0.875rem;
         }
 
         .results-section {
             display: none;
-            animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
         .results-section.visible {
             display: block;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .results-header {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text-main);
         }
 
         .results-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-top: 1.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem 1.5rem;
         }
 
-        .result-card {
-            background: rgba(15, 23, 42, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 1.5rem;
-            border-radius: 16px;
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        .result-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.375rem;
         }
-
-        .result-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
-            border-color: rgba(255, 255, 255, 0.1);
-        }
-
-        .result-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 4px;
-            height: 100%;
-            background: var(--primary);
-            border-radius: 4px 0 0 4px;
-        }
-
-        .result-card.accent::before { background: var(--accent); }
-        .result-card.danger::before { background: var(--danger); }
 
         .result-label {
-            font-size: 0.9rem;
+            font-size: 0.75rem;
             color: var(--text-muted);
-            margin-bottom: 0.5rem;
-            line-height: 1.4;
+            font-weight: 500;
         }
 
         .result-value {
-            font-size: 2rem;
-            font-weight: 700;
+            font-size: 1.5rem;
+            font-weight: 500;
             color: var(--text-main);
             letter-spacing: -0.025em;
         }
 
-        .error-message {
-            color: var(--danger);
-            background: rgba(239, 68, 68, 0.1);
-            padding: 1rem;
-            border-radius: 12px;
-            margin-top: 1rem;
-            text-align: center;
-            display: none;
-            border: 1px solid rgba(239, 68, 68, 0.2);
+        .result-value.highlight {
+            color: var(--primary);
+            font-weight: 600;
         }
 
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         @media (max-width: 600px) {
-            h1 { font-size: 2rem; }
-            .glass-panel { padding: 1.5rem; }
-            .result-value { font-size: 1.5rem; }
+            .card { padding: 1.25rem; }
+            body { padding: 1.5rem 1rem; }
         }
     </style>
-    <!-- Importing Inter Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
     <div class="container">
         <header>
-            <h1>Waste Calculator</h1>
-            <p class="subtitle">Calculate cartridge requirements & waste instantly</p>
+            <h1>Cartridge Waste Calculator</h1>
+            <p class="subtitle">Enter specifications to calculate material requirements.</p>
         </header>
 
-        <main class="glass-panel">
-            <form id="calcForm">
+        <main class="card">
+            <form id="calcForm" onsubmit="event.preventDefault();">
                 <div class="input-grid">
                     <div class="input-group">
                         <label for="totalBoards">Total Required Boards</label>
-                        <input type="number" id="totalBoards" placeholder="e.g. 100" min="0" step="any" required>
+                        <input type="number" id="totalBoards" placeholder="e.g., 100" min="0" step="any" required>
                     </div>
                     <div class="input-group">
                         <label for="mlPerBoard">ML Required for 1 Board</label>
-                        <input type="number" id="mlPerBoard" placeholder="e.g. 5" min="0" step="any" required>
+                        <input type="number" id="mlPerBoard" placeholder="e.g., 5" min="0" step="any" required>
                     </div>
                     <div class="input-group">
                         <label for="mlPerCartridge">Total ML in One Cartridge</label>
-                        <input type="number" id="mlPerCartridge" placeholder="e.g. 50" min="0" step="any" required>
+                        <input type="number" id="mlPerCartridge" placeholder="e.g., 50" min="0" step="any" required>
                     </div>
                     <div class="input-group">
                         <label for="wastePerCartridge">Waste per Cartridge (ML)</label>
-                        <input type="number" id="wastePerCartridge" placeholder="e.g. 2" min="0" step="any" required>
+                        <input type="number" id="wastePerCartridge" placeholder="e.g., 2" min="0" step="any" required>
                     </div>
                 </div>
             </form>
-
-            <div id="errorMessage" class="error-message"></div>
         </main>
 
-        <section id="resultsSection" class="results-section glass-panel">
-            <h2 style="margin-bottom: 1rem; font-size: 1.5rem; font-weight: 700;">Calculated Outputs</h2>
+        <div id="errorMessage" class="error-message"></div>
+
+        <section id="resultsSection" class="results-section card">
+            <h2 class="results-header">Outputs</h2>
             <div class="results-grid">
-                <div class="result-card">
-                    <div class="result-label">1. Actual ML available after waste</div>
+                <div class="result-item">
+                    <div class="result-label">1. Actual ML Available (After Waste)</div>
                     <div class="result-value" id="res1">0</div>
                 </div>
-                <div class="result-card">
-                    <div class="result-label">2. Number of boards per cartridge</div>
+                <div class="result-item">
+                    <div class="result-label">2. Boards per Cartridge</div>
                     <div class="result-value" id="res2">0</div>
                 </div>
-                <div class="result-card accent">
-                    <div class="result-label">3. ML used from 1 cartridge</div>
+                <div class="result-item">
+                    <div class="result-label">3. ML Used per Cartridge</div>
                     <div class="result-value" id="res3">0</div>
                 </div>
-                <div class="result-card danger">
-                    <div class="result-label">4. ML Lost per cartridge</div>
+                <div class="result-item">
+                    <div class="result-label">4. ML Lost per Cartridge</div>
                     <div class="result-value" id="res4">0</div>
                 </div>
-                <div class="result-card">
-                    <div class="result-label">5. Total ML required for all boards</div>
+                <div class="result-item">
+                    <div class="result-label">5. Total ML Req. (All Boards)</div>
                     <div class="result-value" id="res5">0</div>
                 </div>
-                <div class="result-card danger">
-                    <div class="result-label">6. Total ML lost for all boards</div>
+                <div class="result-item">
+                    <div class="result-label">6. Total ML Lost (All Boards)</div>
                     <div class="result-value" id="res6">0</div>
                 </div>
-                <div class="result-card accent">
-                    <div class="result-label">7. Total ML Client needs to give</div>
-                    <div class="result-value" id="res7">0</div>
+                <div class="result-item">
+                    <div class="result-label">7. Total ML Client Gives</div>
+                    <div class="result-value highlight" id="res7">0</div>
                 </div>
-                <div class="result-card accent">
-                    <div class="result-label">8. Total cartridges client needs to give</div>
-                    <div class="result-value" id="res8">0</div>
+                <div class="result-item">
+                    <div class="result-label">8. Total Cartridges Client Gives</div>
+                    <div class="result-value highlight" id="res8">0</div>
                 </div>
             </div>
         </section>
@@ -301,30 +267,24 @@
             const mlPerCartridge = parseFloat(document.getElementById('mlPerCartridge').value);
             const wastePerCartridge = parseFloat(document.getElementById('wastePerCartridge').value);
 
-            // Check if all inputs have valid numbers
             if (isNaN(totalBoards) || isNaN(mlPerBoard) || isNaN(mlPerCartridge) || isNaN(wastePerCartridge)) {
                 resultsSection.classList.remove('visible');
                 errorMessage.style.display = 'none';
                 return;
             }
 
-            // Calculations
-            // 1. Actual ML available after waste
             const actualMlAfterWaste = mlPerCartridge - wastePerCartridge;
-            
             if (actualMlAfterWaste < 0) {
                 showError("Waste per cartridge cannot exceed total ML in cartridge.");
                 return;
             }
 
-            // 2. Number of board per catrige (assuming integer division based on 'MOD' description context)
             if (mlPerBoard <= 0) {
                 showError("ML required for 1 board must be greater than 0.");
                 return;
             }
 
             const boardsPerCartridge = Math.floor(actualMlAfterWaste / mlPerBoard);
-
             if (boardsPerCartridge <= 0) {
                 showError("Not enough usable ML in a cartridge to produce even 1 board.");
                 return;
@@ -332,25 +292,13 @@
 
             hideError();
 
-            // 3. ML used from 1 catrige
             const mlUsedPerCartridge = boardsPerCartridge * mlPerBoard;
-
-            // 4. ML Lost per catrige
             const mlLostPerCartridge = mlPerCartridge - mlUsedPerCartridge;
-
-            // 5. Total ML required For all boards
             const totalMlRequired = totalBoards * (mlUsedPerCartridge / boardsPerCartridge);
-
-            // 6. Total ML lost for all boards
             const totalMlLost = totalBoards * (mlLostPerCartridge / boardsPerCartridge);
-
-            // 7. Total ML Client need to give
             const totalMlClient = totalMlRequired + totalMlLost;
-
-            // 8. Total catriges client need to give
             const totalCartridges = totalMlClient / mlPerCartridge;
 
-            // Update UI
             document.getElementById('res1').innerText = formatNumber(actualMlAfterWaste) + ' ML';
             document.getElementById('res2').innerText = formatNumber(boardsPerCartridge);
             document.getElementById('res3').innerText = formatNumber(mlUsedPerCartridge) + ' ML';
